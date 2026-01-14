@@ -1,0 +1,108 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-01-12 12:29:28.991054",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "package_type_code",
+  "package_type_label",
+  "multi_piece_supported",
+  "column_break_hohm",
+  "weight_unit",
+  "max_weight_per_piece",
+  "dim_type",
+  "dim_unit",
+  "section_break_uyzc",
+  "preset_length",
+  "column_break_svhb",
+  "preset_width",
+  "column_break_kbgb",
+  "preset_height"
+ ],
+ "fields": [
+  {
+   "fieldname": "package_type_code",
+   "fieldtype": "Data",
+   "label": "Package Type Code"
+  },
+  {
+   "fieldname": "package_type_label",
+   "fieldtype": "Data",
+   "label": "Package Type Label"
+  },
+  {
+   "default": "0",
+   "fieldname": "multi_piece_supported",
+   "fieldtype": "Check",
+   "label": "Multi Piece Supported"
+  },
+  {
+   "fieldname": "weight_unit",
+   "fieldtype": "Data",
+   "label": "Weight Unit"
+  },
+  {
+   "fieldname": "max_weight_per_piece",
+   "fieldtype": "Data",
+   "label": "Max Weight Per Piece"
+  },
+  {
+   "fieldname": "dim_type",
+   "fieldtype": "Data",
+   "label": "Dim Type"
+  },
+  {
+   "fieldname": "dim_unit",
+   "fieldtype": "Data",
+   "label": "Dim Unit"
+  },
+  {
+   "fieldname": "preset_length",
+   "fieldtype": "Data",
+   "label": "Preset Length"
+  },
+  {
+   "fieldname": "preset_width",
+   "fieldtype": "Data",
+   "label": "Preset Width"
+  },
+  {
+   "fieldname": "preset_height",
+   "fieldtype": "Data",
+   "label": "Preset Height"
+  },
+  {
+   "fieldname": "section_break_uyzc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_svhb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_kbgb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_hohm",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-01-12 16:01:05.817547",
+ "modified_by": "Administrator",
+ "module": "XPSShipper",
+ "name": "XPS Package Type",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

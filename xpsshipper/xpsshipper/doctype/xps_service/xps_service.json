@@ -1,0 +1,149 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:service_code",
+ "creation": "2026-01-08 15:50:46.534312",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "enabled",
+  "service_code",
+  "service_label",
+  "column_break_xfmz",
+  "carrier_code",
+  "carrier_label",
+  "inbound",
+  "section_break_xzml",
+  "supported_countries",
+  "column_break_iuaw",
+  "unsupported_countries",
+  "section_break_imcl",
+  "signature_options",
+  "column_break_otvz",
+  "package_types"
+ ],
+ "fields": [
+  {
+   "fieldname": "service_code",
+   "fieldtype": "Data",
+   "label": "Service Code",
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "service_label",
+   "fieldtype": "Data",
+   "label": "Service Label",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled"
+  },
+  {
+   "fieldname": "carrier_code",
+   "fieldtype": "Data",
+   "label": "Carrier Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "carrier_label",
+   "fieldtype": "Data",
+   "label": "Carrier Label",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "inbound",
+   "fieldtype": "Check",
+   "label": "Inbound",
+   "read_only": 1
+  },
+  {
+   "fieldname": "supported_countries",
+   "fieldtype": "Small Text",
+   "label": "Supported Countries",
+   "read_only": 1
+  },
+  {
+   "fieldname": "unsupported_countries",
+   "fieldtype": "Small Text",
+   "label": "Unsupported Countries",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_xfmz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_xzml",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_iuaw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_imcl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "signature_options",
+   "fieldtype": "Table",
+   "label": "Signature Options",
+   "options": "XPS Signature Options",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_otvz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "package_types",
+   "fieldtype": "Table",
+   "label": "Package Types",
+   "options": "XPS Package Type",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-12 12:36:29.565978",
+ "modified_by": "Administrator",
+ "module": "XPSShipper",
+ "name": "XPS Service",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Desk User",
+   "share": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "service_label"
+}
