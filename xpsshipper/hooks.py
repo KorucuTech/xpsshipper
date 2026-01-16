@@ -261,11 +261,11 @@ fixtures = [
         "filters": {
             "module": "XPSShipper",
             }
-    },
-    {
-        "dt": "Workspace",
-        "filters": {
-            "module": "XPSShipper",
-            }
     }
+    # {
+    #     "dt": "Workspace",
+    #     "filters": {
+    #         "module": "XPSShipper",
+    #         }
+    # }
 ]
