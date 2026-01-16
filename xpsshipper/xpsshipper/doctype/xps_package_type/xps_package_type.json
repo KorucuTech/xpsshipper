@@ -30,6 +30,8 @@
   {
    "fieldname": "package_type_label",
    "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Package Type Label"
   },
   {
@@ -94,7 +96,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-01-12 16:01:05.817547",
+ "modified": "2026-01-15 15:47:08.083905",
  "modified_by": "Administrator",
  "module": "XPSShipper",
  "name": "XPS Package Type",

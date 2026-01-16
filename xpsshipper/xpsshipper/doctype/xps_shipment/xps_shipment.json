@@ -21,7 +21,10 @@
   "receiver",
   "receiver_address_name",
   "receiver_address",
-  "residential"
+  "residential",
+  "section_break_tgom",
+  "tracking_numbers",
+  "column_break_pacd"
  ],
  "fields": [
   {
@@ -112,17 +115,31 @@
    "fieldtype": "Date",
    "label": "Order Date",
    "reqd": 1
+  },
+  {
+   "fieldname": "section_break_tgom",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "tracking_numbers",
+   "fieldtype": "Table",
+   "label": "Tracking Numbers",
+   "options": "XPS Tracking Number"
+  },
+  {
+   "fieldname": "column_break_pacd",
+   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-01-13 18:48:29.186465",
+ "modified": "2026-01-15 15:53:46.539173",
  "modified_by": "Administrator",
  "module": "XPSShipper",
  "name": "XPS Shipment",
- "naming_rule": "Expression",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
