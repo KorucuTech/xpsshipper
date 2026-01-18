@@ -62,7 +62,8 @@ def list_order():
             "order_date",
             "customer",
             "sender_address_name",
-            "receiver_address_name"
+            "receiver_address_name",
+            "shipping_service"
         ],
         order_by="creation desc",       # Newest first
         limit=50                        # Safety limit; add pagination later if needed
@@ -126,12 +127,47 @@ def list_order():
             fields=["delivery_note", "value"]
         )
 
+        packages = []
+        for parcel in frappe.get_all(
+            "XPS Shipment Parcel",
+            filters={"parent": shipment.name},
+            fields=[
+                "weight",
+                "length",
+                "width",
+                "height",
+                "insurance_amount",
+                "declared_value"
+            ]
+        ):
+            # Convert insurance_amount 0.00 to None
+            insurance_amount = parcel.insurance_amount
+            if insurance_amount in (0, 0.0, "0.00", None):
+                insurance_amount = None
+
+            # Convert declared_value 0.00 to None
+            declared_value = parcel.declared_value
+            if declared_value in (0, 0.0, "0.00", None):
+                declared_value = None
+
+            packages.append({
+                "weight": parcel.weight,
+                "length": parcel.length,
+                "width": parcel.width,
+                "height": parcel.height,
+                "insuranceAmount": insurance_amount,
+                "declaredValue": declared_value
+            })
+
         order = {
             "orderId": shipment.name,
+            "orderName": shipment.name,
             "orderDate": utc_timestamp,
-            "shipperReference": delivery_notes[0].delivery_note if delivery_notes else "",
+            "shippingService": shipment.shipping_service or None,
+            "shipperReference": delivery_notes[0].delivery_note if delivery_notes else None,
             "sender": {
                 "name": pickup_address.address_title if pickup_address else "",
+                "company": shipment.customer,
                 "address1": pickup_address.address_line1 if pickup_address else "",
                 "address2": pickup_address.address_line2 if pickup_address else "",
                 "city": pickup_address.city if pickup_address else "",
@@ -143,6 +179,7 @@ def list_order():
             },
             "receiver": {
                 "name": delivery_address.address_title if delivery_address else "",
+                "company": shipment.customer,
                 "address1": delivery_address.address_line1 if delivery_address else "",
                 "address2": delivery_address.address_line2 if delivery_address else "",
                 "city": delivery_address.city if delivery_address else "",
@@ -151,16 +188,12 @@ def list_order():
                 "zip": delivery_address.pincode if delivery_address else "",
                 "phone": delivery_address.phone if delivery_address else "",
                 "email": delivery_address.email if delivery_address else ""
-            },        
+            },  
+            "packages": packages if packages else []    
         }
-        
-        print("=========ORDER=========")
-        print(order)
-        print("=======================")
         
         orders.append(order)
         
-
     data = {"orders": orders}
 
     # Return raw JSON directly
@@ -172,30 +205,62 @@ def list_order():
  
 
 ##################################################################################################
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=True,methods=["POST"])
 def update_order():
-    # Check if WEBHOOK integration is enabled
+    # --------------------------------------------------
+    # 1️⃣ Security checks
+    # --------------------------------------------------
     enabled = frappe.db.get_single_value("XPS Settings", "enable_webhook")
     if not enabled:
-        frappe.throw("XPS Shipper WEBHOOK is not enabled.", exc=frappe.PermissionError)
+        frappe.throw(_("XPS Shipper WEBHOOK is not enabled."), frappe.PermissionError)
 
-    # Verify secret
     received_secret = frappe.request.headers.get("x-rsis-key")
     expected_secret = frappe.db.get_single_value("XPS Settings", "webhook_secret_key")
+
     if not expected_secret or received_secret != expected_secret:
-        frappe.throw("Invalid webhook secret", exc=frappe.AuthenticationError) 
+        frappe.throw(_("Invalid webhook secret"), frappe.AuthenticationError)
 
-    payload = frappe.request.get_json()
-    frappe.log_error(title="XPS Update Order Webhook", message=str(payload))  # Debug log
+    # --------------------------------------------------
+    # 2️⃣ Read payload (FORM-ENCODED)
+    # --------------------------------------------------
+    payload = frappe.form_dict.copy()
 
-    data = {"status": "received"}
-    
-    # Return raw JSON directly
-    return Response(
-        json.dumps(data, ensure_ascii=False, indent=None),  
-        mimetype='application/json'
-    )
+    shipment_name = payload.get("orderId")
+    if not shipment_name:
+        frappe.throw(_("orderId (XPS Shipment ID) is required"))
 
+    # --------------------------------------------------
+    # 3️⃣ Load XPS Shipment
+    # --------------------------------------------------
+    if not frappe.db.exists("XPS Shipment", shipment_name):
+        frappe.throw(_("XPS Shipment {0} not found").format(shipment_name))
+
+    shipment = frappe.get_doc("XPS Shipment", shipment_name)
+
+    # --------------------------------------------------
+    # 4️⃣ Update tracking numbers
+    # --------------------------------------------------
+    tracking_numbers = payload.get("trackingNumbers", "")
+    if tracking_numbers:
+        shipment.tracking_numbers = []
+
+        for tn in tracking_numbers.split(","):
+            shipment.append("tracking_numbers", {
+                "tracking_number": tn.strip()
+            })
+
+    # --------------------------------------------------
+    # 5️⃣ Save safely
+    # --------------------------------------------------
+    shipment.flags.ignore_permissions = True
+    shipment.save()
+
+    frappe.db.commit()
+
+    return {
+        "status": "OK",
+        "shipment": shipment.name
+    }
 ##################################################################################################
 @frappe.whitelist(allow_guest=True)
 def get_order():

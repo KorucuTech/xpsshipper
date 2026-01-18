@@ -44,9 +44,6 @@ app_license = "mit"
 
 # include js in doctype views
 
-doctype_js = {
-    "Delivery Note": "public/js/delivery_note.js"
-}
 
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -248,6 +245,22 @@ doctype_js = {
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
+
+ignore_links_on_delete = ["XPS Shipment"]
+
+doc_events = {
+    "XPS Shipment": {
+        "before_delete": "xpsshipper.xpsshipper.doctype.xps_shipment.xps_shipment.before_delete"
+    }
+}
+
+# JS for Doctypes
+# Use dict, not list of dicts
+doctype_js = {
+    "XPS Shipment": "public/js/xps_shipment.js",
+    "Delivery Note": "public/js/delivery_note.js"
+}
+
 
 fixtures = [
     {

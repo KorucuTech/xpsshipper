@@ -2,7 +2,7 @@
  "actions": [],
  "allow_copy": 1,
  "allow_rename": 1,
- "autoname": "format:XPS-{YY}-{######}",
+ "autoname": "format:XPS{YY}{######}",
  "creation": "2026-01-10 16:13:31.703976",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -11,6 +11,8 @@
   "amended_from",
   "customer",
   "order_date",
+  "shipping_service",
+  "package_type",
   "column_break_vtln",
   "delivery_notes",
   "section_break_lzmv",
@@ -23,8 +25,9 @@
   "receiver_address",
   "residential",
   "section_break_tgom",
-  "tracking_numbers",
-  "column_break_pacd"
+  "parcels",
+  "column_break_pacd",
+  "tracking_numbers"
  ],
  "fields": [
   {
@@ -47,8 +50,7 @@
    "fieldname": "delivery_notes",
    "fieldtype": "Table",
    "label": "Delivery Notes",
-   "options": "XPS Shipment Delivery Note",
-   "reqd": 1
+   "options": "XPS Shipment Delivery Note"
   },
   {
    "fieldname": "customer",
@@ -129,14 +131,31 @@
   {
    "fieldname": "column_break_pacd",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "shipping_service",
+   "fieldtype": "Link",
+   "label": "Shipping Service",
+   "options": "XPS Service"
+  },
+  {
+   "fieldname": "parcels",
+   "fieldtype": "Table",
+   "label": "Parcels",
+   "options": "XPS Shipment Parcel"
+  },
+  {
+   "fieldname": "package_type",
+   "fieldtype": "Select",
+   "label": "Package Type"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-01-15 15:53:46.539173",
- "modified_by": "Administrator",
+ "modified": "2026-01-18 13:52:04.017947",
+ "modified_by": "kemal@korucutech.com",
  "module": "XPSShipper",
  "name": "XPS Shipment",
  "naming_rule": "Expression (old style)",

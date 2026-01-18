@@ -56,6 +56,7 @@
    "label": "Test API Access"
   },
   {
+   "default": "https://yoursite.com/api/method/xpsshipper.webhooks.update_order",
    "fieldname": "update_order_webhook_url",
    "fieldtype": "Data",
    "label": "Update Order URL"
@@ -81,16 +82,19 @@
    "label": "WEBHOOK"
   },
   {
+   "default": "https://yoursite.com/api/method/xpsshipper.webhooks.list_order",
    "fieldname": "list_orders_webhook_url",
    "fieldtype": "Data",
    "label": "List Orders URL"
   },
   {
+   "default": "https://yoursite.com/api/method/xpsshipper.webhooks.get_order",
    "fieldname": "get_order_webhook_url",
    "fieldtype": "Data",
    "label": "Get Order URL"
   },
   {
+   "default": "ERPNext Webhook",
    "fieldname": "webhook_integration_name",
    "fieldtype": "Data",
    "label": "Integration Name"
@@ -106,7 +110,7 @@
    "label": "Secret Key"
   },
   {
-   "default": "https://yoursite.com/api/method/xpsshipper.xpsshipper.webhooks.rest_api_update_order",
+   "default": "https://yoursite.com/api/method/xpsshipper.webhooks.rest_api_update_order",
    "fieldname": "rest_api_update_order_url",
    "fieldtype": "Data",
    "label": "Update Order URL"
@@ -149,8 +153,8 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-01-10 13:54:54.707050",
- "modified_by": "Administrator",
+ "modified": "2026-01-16 09:05:55.241614",
+ "modified_by": "kemal@korucutech.com",
  "module": "XPSShipper",
  "name": "XPS Settings",
  "owner": "Administrator",
