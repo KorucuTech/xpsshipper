@@ -167,7 +167,7 @@ def list_order():
             "shipperReference": delivery_notes[0].delivery_note if delivery_notes else None,
             "sender": {
                 "name": pickup_address.address_title if pickup_address else "",
-                "company": shipment.customer,
+                "company": shipment.custom_attention,
                 "address1": pickup_address.address_line1 if pickup_address else "",
                 "address2": pickup_address.address_line2 if pickup_address else "",
                 "city": pickup_address.city if pickup_address else "",
@@ -179,7 +179,7 @@ def list_order():
             },
             "receiver": {
                 "name": delivery_address.address_title if delivery_address else "",
-                "company": shipment.customer,
+                "company": shipment.custom_attention,
                 "address1": delivery_address.address_line1 if delivery_address else "",
                 "address2": delivery_address.address_line2 if delivery_address else "",
                 "city": delivery_address.city if delivery_address else "",

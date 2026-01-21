@@ -37,6 +37,12 @@ class XPSShipment(Document):
                 )
             )
 
+    def before_submit(self):
+        if not self.tracking_numbers:
+            frappe.throw(
+                _("At least oneTracking Number is required before submitting the XPS Shipment."),
+                title=_("Missing Tracking Number")
+            )
 
     # --------------------------------------------------
     # Validate Customer consistency of Delivery Notes
@@ -163,6 +169,7 @@ class XPSShipment(Document):
     # --------------------------------------------------
     def on_cancel(self):
         self.unlink_all_delivery_notes()
+        self.clear_delivery_notes_table()
 
     def unlink_all_delivery_notes(self):
         """
@@ -193,7 +200,12 @@ class XPSShipment(Document):
                     update_modified=False
                 )
 
-
+    def clear_delivery_notes_table(self):
+        """
+        Remove all Delivery Note rows from the delivery_notes child table
+        when the XPS Shipment is cancelled.
+        """
+        self.set("delivery_notes", [])
 ######################################################################################################
 def before_delete(doc, method):
     """
