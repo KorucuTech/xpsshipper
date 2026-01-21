@@ -40,7 +40,7 @@ class XPSShipment(Document):
     def before_submit(self):
         if not self.tracking_numbers:
             frappe.throw(
-                _("At least oneTracking Number is required before submitting the XPS Shipment."),
+                _("At least one Tracking Number is required before submitting the XPS Shipment."),
                 title=_("Missing Tracking Number")
             )
 
