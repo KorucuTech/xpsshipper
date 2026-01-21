@@ -246,7 +246,7 @@ app_license = "mit"
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 
-ignore_links_on_delete = ["XPS Shipment"]
+#ignore_links_on_delete = ["XPS Shipment"]
 
 doc_events = {
     "XPS Shipment": {

@@ -1,6 +1,7 @@
 # Copyright (c) 2026, Kemal Korucu and contributors
 # For license information, please see license.txt
 
+from pydoc import doc
 import frappe
 from frappe.model.document import Document
 from frappe import _
@@ -8,6 +9,8 @@ from frappe import _
 
 
 class XPSShipment(Document):
+    ignore_links_on_cancel = True
+    ignore_links_on_delete = True
 
     def validate(self):
         self.validate_customer_delivery_notes()
@@ -152,53 +155,54 @@ class XPSShipment(Document):
         return set(previous)
 
     def update_delivery_note_link(self, delivery_note, shipment_name):
-        dn = frappe.get_doc("Delivery Note", delivery_note)
+        dn = None
 
-        # Safety check — never overwrite another shipment
         if shipment_name:
-            if dn.custom_xps_shipment and dn.custom_xps_shipment != shipment_name:
+            # Only check when linking
+            dn = frappe.db.get_value(
+                "Delivery Note",
+                delivery_note,
+                "custom_xps_shipment"
+            )
+
+            if dn and dn != shipment_name:
                 frappe.throw(
                     _("Delivery Note {0} is already linked to XPS Shipment {1}.")
-                    .format(frappe.bold(delivery_note), frappe.bold(dn.custom_xps_shipment))
+                    .format(frappe.bold(delivery_note), frappe.bold(dn))
                 )
 
-        dn.db_set("custom_xps_shipment", shipment_name, update_modified=False)
+        # Always update link via DB only
+        frappe.db.set_value(
+            "Delivery Note",
+            delivery_note,
+            "custom_xps_shipment",
+            shipment_name,
+            update_modified=False,
+        )
 
     # --------------------------------------------------
     # Cancellation logic
     # --------------------------------------------------
+    def before_cancel(self):
+        pass
+
     def on_cancel(self):
         self.unlink_all_delivery_notes()
         self.clear_delivery_notes_table()
 
     def unlink_all_delivery_notes(self):
         """
-        Clear custom_xps_shipment from all Delivery Notes
-        linked to this XPS Shipment.
+        Remove XPS Shipment link from Delivery Notes
+        WITHOUT loading the documents.
         """
-        delivery_notes = frappe.get_all(
-            "XPS Shipment Delivery Note",
-            filters={
-                "parent": self.name,
-                "parenttype": "XPS Shipment",
-                "parentfield": "delivery_notes",
-            },
-            pluck="delivery_note",
+        frappe.db.sql(
+            """
+            UPDATE `tabDelivery Note`
+            SET custom_xps_shipment = NULL
+            WHERE custom_xps_shipment = %s
+            """,
+            self.name,
         )
-
-        for dn_name in delivery_notes:
-            if not dn_name:
-                continue
-
-            dn = frappe.get_doc("Delivery Note", dn_name)
-
-            # Only clear if it points to THIS shipment
-            if dn.custom_xps_shipment == self.name:
-                dn.db_set(
-                    "custom_xps_shipment",
-                    None,
-                    update_modified=False
-                )
 
     def clear_delivery_notes_table(self):
         """
@@ -213,27 +217,21 @@ def before_delete(doc, method):
     Only Draft shipments are allowed.
     """
     if doc.docstatus != 0:
-        frappe.throw(_("Only Draft XPS Shipments can be deleted."), title=_("Delete Not Allowed"))
+        frappe.throw(_("Only Draft XPS Shipments can be deleted."))
 
-    # Unlink all linked DNs
-    delivery_notes = frappe.get_all(
-        "XPS Shipment Delivery Note",
-        filters={
-            "parent": doc.name,
-            "parenttype": "XPS Shipment",
-            "parentfield": "delivery_notes",
-        },
-        pluck="delivery_note",
+    frappe.db.sql(
+        """
+        UPDATE `tabDelivery Note`
+        SET custom_xps_shipment = NULL
+        WHERE custom_xps_shipment = %s
+        """,
+        doc.name,
     )
 
-    for dn_name in delivery_notes:
-        if not dn_name:
-            continue
-        dn = frappe.get_doc("Delivery Note", dn_name)
-
-        # Only clear if this DN points to THIS shipment
-        if dn.custom_xps_shipment == doc.name:
-            dn.db_set("custom_xps_shipment", None, update_modified=False)
+    # Clear child table
+    doc.set("delivery_notes", [])
+    doc.flags.ignore_mandatory = True
+    doc.db_update()
 
 ######################################################################################################
 @frappe.whitelist()
