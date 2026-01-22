@@ -1,0 +1,31 @@
+{
+  "name": "Order Tracking",
+  "report_name": "Order Tracking",
+  "doctype": "Report",
+  "module": "XPSShipper",
+  "is_standard": "Yes",
+  "report_type": "Script Report",
+  "ref_doctype": "Customer",
+  "filters": [
+    {
+      "fieldname": "customer",
+      "label": "Customer",
+      "fieldtype": "Link",
+      "options": "Customer",
+      "reqd": 1
+    },
+    {
+      "fieldname": "limit_start",
+      "label": "Start Index",
+      "fieldtype": "Int",
+      "default": 0
+    },
+    {
+      "fieldname": "page_length",
+      "label": "Page Length",
+      "fieldtype": "Int",
+      "default": 100
+    }
+  ],
+  "script": "xpsshipper.xpsshipper.report.order_tracking.order_tracking.execute"
+}
