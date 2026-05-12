@@ -1,0 +1,19 @@
+{
+  "name": "Order Tracking 2",
+  "report_name": "Order Tracking",
+  "doctype": "Report",
+  "module": "XPSShipper",
+  "is_standard": "Yes",
+  "report_type": "Script Report",
+  "ref_doctype": "Customer",
+  "filters": [
+    {
+      "fieldname": "customer",
+      "label": "Customer",
+      "fieldtype": "Link",
+      "options": "Customer",
+      "reqd": 1
+    }
+  ],
+  "script": "xpsshipper.xpsshipper.report.order_tracking_2.order_tracking_2.execute"
+}
