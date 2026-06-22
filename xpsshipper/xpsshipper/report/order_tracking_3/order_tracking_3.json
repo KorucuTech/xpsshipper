@@ -1,0 +1,31 @@
+{
+  "name": "Order Tracking 3",
+  "report_name": "Order Tracking 3",
+  "doctype": "Report",
+  "module": "XPSShipper",
+  "is_standard": "Yes",
+  "report_type": "Script Report",
+  "ref_doctype": "Customer",
+  "filters": [
+    {
+      "fieldname": "customer",
+      "label": "Customer",
+      "fieldtype": "Link",
+      "options": "Customer",
+      "reqd": 1
+    },
+    {
+      "fieldname": "so_date_from",
+      "label": "From Date",
+      "fieldtype": "Date",
+      "reqd": 1
+    },
+    {
+      "fieldname": "so_date_thru",
+      "label": "To Date",
+      "fieldtype": "Date",
+      "reqd": 1
+    }
+  ],
+  "script": "xpsshipper.xpsshipper.report.order_tracking_3.order_tracking_3.execute"
+}
