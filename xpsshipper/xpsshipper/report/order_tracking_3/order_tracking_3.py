@@ -48,7 +48,14 @@ def get_columns():
             "fieldtype": "Data",
             "width": 250,
             "align": "left"
-        }
+        },
+        {
+            "label": "Tracking Numbers",
+            "fieldname": "tracking_numbers",
+            "fieldtype": "Data",
+            "width": 250,
+            "align": "left",
+        },
     ]
 
 
@@ -79,13 +86,15 @@ def get_data(filters):
     if filters.get("include_canceled"):
         selected_docstatus.append("2")
 
-    # If no statuses are selected, return no rows.
     if not selected_docstatus:
         return []
 
-    conditions.append(f"so.docstatus IN ({','.join(selected_docstatus)})")
+    conditions.append(
+        f"so.docstatus IN ({','.join(selected_docstatus)})"
+    )
 
     where_clause = ""
+
     if conditions:
         where_clause = "WHERE " + " AND ".join(conditions)
 
@@ -96,30 +105,61 @@ def get_data(filters):
             so.name AS sales_order,
             so.transaction_date,
             so.per_delivered,
+
             COALESCE(
                 GROUP_CONCAT(
-                    DISTINCT CASE
-                        WHEN si.name IS NOT NULL THEN si.name
-                    END
+                    DISTINCT si.name
                     ORDER BY si.name
                     SEPARATOR ', '
                 ),
                 ''
             ) AS invoices,
+
+            COALESCE(
+                GROUP_CONCAT(
+                    DISTINCT xtn.tracking_number
+                    ORDER BY xtn.tracking_number
+                    SEPARATOR ', '
+                ),
+                ''
+            ) AS tracking_numbers,
+
             so.status
+
         FROM `tabSales Order` so
+
         LEFT JOIN `tabSales Invoice Item` sii
             ON sii.sales_order = so.name
+
         LEFT JOIN `tabSales Invoice` si
             ON si.name = sii.parent
-           AND si.docstatus = 1
+            AND si.docstatus = 1
+
+
+        LEFT JOIN `tabDelivery Note Item` dni
+            ON dni.against_sales_order = so.name
+
+        LEFT JOIN `tabDelivery Note` dn
+            ON dn.name = dni.parent
+            AND dn.docstatus = 1
+
+        LEFT JOIN `tabXPS Shipment` xs
+            ON xs.name = dn.custom_xps_shipment
+
+        LEFT JOIN `tabXPS Tracking Number` xtn
+            ON xtn.parent = xs.name
+            AND xtn.parenttype = 'XPS Shipment'
+            AND xtn.parentfield = 'tracking_numbers'
+
         {where_clause}
+
         GROUP BY
             so.name,
             so.customer,
             so.transaction_date,
             so.per_delivered,
             so.status
+
         ORDER BY
             so.customer,
             so.transaction_date DESC,
