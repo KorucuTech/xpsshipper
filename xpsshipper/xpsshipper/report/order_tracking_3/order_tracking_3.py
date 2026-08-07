@@ -2,6 +2,17 @@ import frappe
 
 
 def execute(filters=None):
+    filters = filters or {}
+
+    if not filters.get("so_date_from"):
+        filters["so_date_from"] = frappe.utils.add_days(
+            frappe.utils.today(), -90
+        )
+
+    if not filters.get("so_date_thru"):
+        filters["so_date_thru"] = frappe.utils.today()
+
+
     columns = get_columns()
     data = get_data(filters)
 
