@@ -25,6 +25,24 @@
       "label": "To Date",
       "fieldtype": "Date",
       "reqd": 1
+    },
+    {
+      "fieldname": "include_draft",
+      "label": "Draft",
+      "fieldtype": "Check",
+      "default": 0
+    },
+    {
+      "fieldname": "include_submitted",
+      "label": "Submitted",
+      "fieldtype": "Check",
+      "default": 1
+    },
+    {
+      "fieldname": "include_canceled",
+      "label": "Canceled",
+      "fieldtype": "Check",
+      "default": 0
     }
   ],
   "script": "xpsshipper.xpsshipper.report.order_tracking_3.order_tracking_3.execute"
