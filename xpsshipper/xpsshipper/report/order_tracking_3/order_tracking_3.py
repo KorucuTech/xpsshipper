@@ -36,6 +36,12 @@ def get_columns():
             "width": 200
         },
         {
+            "label": "Customer PO",
+            "fieldname": "customer_po",
+            "fieldtype": "Data",
+            "width": 200
+        },
+        {
             "label": "SO Date",
             "fieldname": "transaction_date",
             "fieldtype": "Date",
@@ -64,7 +70,7 @@ def get_columns():
             "label": "Tracking Numbers",
             "fieldname": "tracking_numbers",
             "fieldtype": "Data",
-            "width": 250,
+            "width": 750,
             "align": "left",
         },
     ]
@@ -114,6 +120,7 @@ def get_data(filters):
         SELECT
             so.customer,
             so.name AS sales_order,
+            so.po_no AS customer_po,
             so.transaction_date,
             so.per_delivered,
 
