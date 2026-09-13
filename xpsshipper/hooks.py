@@ -265,20 +265,14 @@ doctype_js = {
 fixtures = [
     {
         "dt": "Custom Field",
-        "filters": {
-            "module": "XPSShipper",
-            }
+        "filters": [
+            ["module", "=", "XPSShipper"]
+        ]
     },
     {
         "dt": "Property Setter",
-        "filters": {
-            "module": "XPSShipper",
-            }
+        "filters": [
+            ["module", "=", "XPSShipper"]
+        ]
     }
-    # {
-    #     "dt": "Workspace",
-    #     "filters": {
-    #         "module": "XPSShipper",
-    #         }
-    # }
 ]
