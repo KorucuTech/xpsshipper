@@ -1,5 +1,5 @@
 import frappe
-
+from frappe.utils import flt
 
 def execute(filters=None):
     filters = filters or {}
@@ -60,6 +60,12 @@ def get_columns():
             "width": 150
         },
         {
+            "label": "Order Status",
+            "fieldname": "order_status",
+            "fieldtype": "Data",
+            "width": 150
+        },
+        {
             "label": "Invoices",
             "fieldname": "invoices",
             "fieldtype": "Data",
@@ -74,6 +80,50 @@ def get_columns():
             "align": "left",
         },
     ]
+
+
+def get_order_status(so_status, per_delivered):
+    """
+    Calculates the Order Status based on the provided matrix.
+    """
+    per_delivered = flt(per_delivered)
+
+    # Draft and On Hold statuses
+    if so_status == "Draft":
+        return "Draft"
+    if so_status == "On Hold":
+        return "On Hold"
+    
+    # To Pay status (remains same regardless of delivery)
+    if so_status == "To Pay":
+        return "To Pay"
+    
+    # To Deliver and Bill / To Bill / To Deliver statuses
+    if so_status in ["To Deliver and Bill", "To Bill", "To Deliver"]:
+        if per_delivered == 0:
+            return "In Progress"
+        elif 1 <= per_delivered < 100:
+            return "Partially Completed"
+        elif per_delivered >= 100:
+            return "Completed"
+            
+    # Completed status
+    if so_status == "Completed":
+        return "Completed"
+    
+    # Cancelled and Closed statuses
+    if so_status in ["Cancelled", "Closed"]:
+        if per_delivered == 0:
+            return "Cancelled"
+        elif 1 <= per_delivered < 100:
+            return "Completed w/ Return(s)"
+        elif per_delivered >= 100:
+            # Based on the image, 100% delivered for Cancelled/Closed is empty/greyed out.
+            # Returning None will leave the cell blank in the report.
+            return None 
+            
+    # Fallback for any unmapped statuses
+    return None
 
 
 def get_data(filters):
@@ -115,7 +165,7 @@ def get_data(filters):
     if conditions:
         where_clause = "WHERE " + " AND ".join(conditions)
 
-    return frappe.db.sql(
+    data = frappe.db.sql(
         f"""
         SELECT
             so.customer,
@@ -186,3 +236,9 @@ def get_data(filters):
         values,
         as_dict=True,
     )
+
+    # Apply the calculated Order Status logic to each row
+    for row in data:
+        row["order_status"] = get_order_status(row.get("status"), row.get("per_delivered"))
+
+    return data
