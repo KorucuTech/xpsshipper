@@ -63,7 +63,7 @@ def get_columns():
             "label": "Order Status",
             "fieldname": "order_status",
             "fieldtype": "Data",
-            "width": 150
+            "width": 200
         },
         {
             "label": "Invoices",
