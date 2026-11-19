@@ -277,6 +277,5 @@ fixtures = [
     }
 ]
 
-has_permission = {
-    "Report": "xpsshipper.permissions.report_has_permission"
-}
+# Intercept API requests to block specific users from specific reports
+before_request = ["xpsshipper.permissions.block_api_report_access"]
