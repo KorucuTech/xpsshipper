@@ -276,3 +276,7 @@ fixtures = [
         ]
     }
 ]
+
+has_permission = {
+    "Report": "xpsshipper.permissions.report_has_permission"
+}
