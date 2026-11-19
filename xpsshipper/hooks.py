@@ -277,5 +277,6 @@ fixtures = [
     }
 ]
 
-# Intercept API requests to block specific users from specific reports
-before_request = ["xpsshipper.permissions.block_api_report_access"]
+override_whitelisted_methods = {
+    "frappe.desk.query_report.run": "xpsshipper.permissions.custom_query_report_run"
+}
