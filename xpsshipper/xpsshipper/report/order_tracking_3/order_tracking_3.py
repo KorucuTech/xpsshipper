@@ -14,6 +14,12 @@ def execute(filters=None):
 
 
     columns = get_columns()
+
+    # Check if customer is missing before running the SQL
+    if not filters.get("customer") or str(filters.get("customer")).strip() == "":
+        # Return empty data and a message to display in the UI
+        return columns, [], "Please select a Customer to view orders."
+    
     data = get_data(filters)
 
     return columns, data
@@ -130,9 +136,15 @@ def get_data(filters):
     conditions = []
     values = {}
 
-    if filters.get("customer"):
-        conditions.append("so.customer = %(customer)s")
-        values["customer"] = filters["customer"]
+    # 1. Force the Customer filter to exist
+    customer = filters.get("customer")
+    
+    # If customer is empty, None, or missing entirely, stop the report.
+    if not customer or str(customer).strip() == "":
+        frappe.throw("A Customer filter must be provided to run this report.")
+        
+    conditions.append("so.customer = %(customer)s")
+    values["customer"] = customer
 
     if filters.get("so_date_from"):
         conditions.append("so.transaction_date >= %(so_date_from)s")

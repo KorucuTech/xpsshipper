@@ -277,6 +277,6 @@ fixtures = [
     }
 ]
 
-override_whitelisted_methods = {
-    "frappe.desk.query_report.run": "xpsshipper.permissions.custom_query_report_run"
-}
+# override_whitelisted_methods = {
+#     "frappe.desk.query_report.run": "xpsshipper.permissions.custom_query_report_run"
+# }
