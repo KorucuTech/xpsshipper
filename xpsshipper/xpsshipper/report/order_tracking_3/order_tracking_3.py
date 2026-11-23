@@ -4,23 +4,26 @@ from frappe.utils import flt
 def execute(filters=None):
     filters = filters or {}
 
+    # 1. Enforce the Customer filter
+    if not filters.get("customer") or str(filters.get("customer")).strip() == "":
+        columns = get_columns()
+        return columns, [], "Please select a Customer to view orders."
+
+    # 2. Enforce Date Filters (Strictly expects 'so_date_from' and 'so_date_thru')
     if not filters.get("so_date_from"):
-        filters["so_date_from"] = frappe.utils.add_days(
-            frappe.utils.today(), -90
-        )
+        columns = get_columns()
+        return columns, [], "Please provide a 'From Date'."
 
     if not filters.get("so_date_thru"):
-        filters["so_date_thru"] = frappe.utils.today()
+        columns = get_columns()
+        return columns, [], "Please provide a 'To Date'."
 
-
+    # 3. Run the data query
     columns = get_columns()
-
-    # Check if customer is missing before running the SQL
-    if not filters.get("customer") or str(filters.get("customer")).strip() == "":
-        # Return empty data and a message to display in the UI
-        return columns, [], "Please select a Customer to view orders."
-    
     data = get_data(filters)
+
+    if not data:
+        return columns, [], "No orders found for the selected Customer and Date Range."
 
     return columns, data
 
