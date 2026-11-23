@@ -35,20 +35,21 @@ def get_columns():
             "fieldname": "customer",
             "fieldtype": "Link",
             "options": "Customer",
-            "width": 180,
+            "width": 150,
         },
         {
             "label": "Sales Order ID",
             "fieldname": "sales_order",
             "fieldtype": "Link",
             "options": "Sales Order",
-            "width": 200
+            "width": 150
         },
         {
             "label": "Customer PO",
             "fieldname": "customer_po",
             "fieldtype": "Data",
-            "width": 200
+            "width": 200,
+            "align": "left"
         },
         {
             "label": "SO Date",
@@ -66,19 +67,21 @@ def get_columns():
             "label": "SO Status",
             "fieldname": "status",
             "fieldtype": "Data",
-            "width": 150
+            "width": 150,
+            "align": "left"
         },
         {
             "label": "Order Status",
             "fieldname": "order_status",
             "fieldtype": "Data",
-            "width": 200
+            "width": 200,
+            "align": "left"
         },
         {
             "label": "Invoices",
             "fieldname": "invoices",
             "fieldtype": "Data",
-            "width": 250,
+            "width": 270,
             "align": "left"
         },
         {
